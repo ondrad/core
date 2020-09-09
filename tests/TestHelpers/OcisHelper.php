@@ -91,7 +91,6 @@ class OcisHelper {
 			$deleteCmd = \sprintf($deleteCmd, $user[0] . '/' . $user);
 //			var_dump($deleteCmd);
 			\exec($deleteCmd);
-			\exec('docker exec -it ocis rm /var/tmp/ocis-accounts/' . $user);
 		} else {
 			self::recurseRmdir(self::getOcisRevaDataRoot() . $user);
 		}
