@@ -381,12 +381,13 @@ class OcmController extends Controller {
 						Http::STATUS_NOT_IMPLEMENTED
 					);
 
+					// This code was unreachable and has been commented out:
 					// owner or sender unshared a resource
-					$share = $this->ocmMiddleware->getValidShare(
-						$providerId, $notification['sharedSecret']
-					);
-					$this->fedShareManager->undoReshare($share);
-					break;
+					//$share = $this->ocmMiddleware->getValidShare(
+					//	$providerId, $notification['sharedSecret']
+					//);
+					//$this->fedShareManager->undoReshare($share);
+					//break;
 				default:
 					return new JSONResponse(
 						['message' => "Notification of type {$notificationType} is not supported"],
