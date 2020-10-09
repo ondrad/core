@@ -2910,6 +2910,7 @@ class Share20OcsControllerTest extends TestCase {
 			->will($this->returnValueMap([
 				['path', null, $requestedPath],
 				['reshares', null, $requestedReshares ? 'true' : 'false'],
+				['share_types', '', ''],
 		]));
 
 		$this->shareManager->method('outgoingServer2ServerSharesAllowed')->willReturn($fedAllowed);
