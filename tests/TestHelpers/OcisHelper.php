@@ -45,30 +45,63 @@ class OcisHelper {
 	}
 
 	/**
-	 * @return bool
+	 * @return bool|string false if no command given or the command as string
 	 */
 	public static function getDeleteUserDataCommand() {
-		return (\getenv("DELETE_USER_DATA_CMD"));
+		$cmd = \getenv("DELETE_USER_DATA_CMD");
+		if (\trim($cmd) === "") {
+			return false;
+		}
+		return $cmd;
 	}
 
 	/**
-	 * @return bool
+	 * @return bool|string false if no command given or the command as string
+	 *
 	 */
 	public static function getDeleteUserShareCommand() {
-		return (\getenv("DELETE_USER_SHARE_CMD"));
+		$cmd = \getenv("DELETE_USER_SHARE_CMD");
+		if (\trim($cmd) === "") {
+			return false;
+		}
+		return $cmd;
+	}
+
+	/**
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function getStorageDriver() {
+		$storageDriver = (\getenv("STORAGE_DRIVER"));
+		if ($storageDriver === false) {
+			return "OWNCLOUD";
+		}
+		if ($storageDriver !== "OCIS" && $storageDriver !== "EOS" && $storageDriver !== "OWNCLOUD") {
+			throw new \Exception(
+				"Invalid storage driver. " .
+				"STORAGE_DRIVER must be OCIS|EOS|OWNCLOUD"
+			);
+		}
+		return $storageDriver;
 	}
 
 	/**
 	 * @param string $user
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	public static function deleteRevaUserShares($user = "") {
 		$deleteCmd = self::getDeleteUserShareCommand();
-		if ($deleteCmd !== false && $user !== "") {
-			$deleteCmd = \str_replace("%s", $user[0] . '/' . $user, $deleteCmd);
-			\exec($deleteCmd);
+		if ($deleteCmd === false) {
+			return; // nothing to do
 		}
+		if ($user !== "" && self::getStorageDriver() === "EOS") {
+			$deleteCmd = \str_replace("%s", $user[0] . '/' . $user, $deleteCmd);
+		} else {
+			$deleteCmd = \sprintf($deleteCmd, $user);
+		}
+		\exec($deleteCmd);
 	}
 
 	/**
@@ -78,12 +111,18 @@ class OcisHelper {
 	 */
 	public static function deleteRevaUserData($user = "") {
 		$deleteCmd = self::getDeleteUserDataCommand();
-		if ($deleteCmd !== false) {
-			$deleteCmd = \str_replace("%s", $user[0] . '/' . $user, $deleteCmd);
-			\exec($deleteCmd);
-		} else {
+		if ($deleteCmd === false) {
 			self::recurseRmdir(self::getOcisRevaDataRoot() . $user);
+			return;
 		}
+		if (self::getStorageDriver() === "EOS") {
+			$deleteCmd = \str_replace(
+				"%s", $user[0] . '/' . $user, $deleteCmd
+			);
+		} else {
+			$deleteCmd = \sprintf($deleteCmd, $user);
+		}
+		\exec($deleteCmd);
 	}
 
 	/**
