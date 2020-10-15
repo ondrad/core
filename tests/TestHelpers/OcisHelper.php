@@ -56,18 +56,6 @@ class OcisHelper {
 	}
 
 	/**
-	 * @return bool|string false if no command given or the command as string
-	 *
-	 */
-	public static function getDeleteUserShareCommand() {
-		$cmd = \getenv("DELETE_USER_SHARE_CMD");
-		if (\trim($cmd) === "") {
-			return false;
-		}
-		return $cmd;
-	}
-
-	/**
 	 * @return string
 	 * @throws \Exception
 	 */
@@ -83,25 +71,6 @@ class OcisHelper {
 			);
 		}
 		return $storageDriver;
-	}
-
-	/**
-	 * @param string $user
-	 *
-	 * @return void
-	 * @throws \Exception
-	 */
-	public static function deleteRevaUserShares($user = "") {
-		$deleteCmd = self::getDeleteUserShareCommand();
-		if ($deleteCmd === false) {
-			return; // nothing to do
-		}
-		if ($user !== "" && self::getStorageDriver() === "EOS") {
-			$deleteCmd = \str_replace("%s", $user[0] . '/' . $user, $deleteCmd);
-		} else {
-			$deleteCmd = \sprintf($deleteCmd, $user);
-		}
-		\exec($deleteCmd);
 	}
 
 	/**
