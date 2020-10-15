@@ -30,16 +30,6 @@ namespace TestHelpers;
  * @package TestHelpers
  */
 class OcisHelper {
-
-	private static $withSkeleton = true;
-
-	public static function setSkeleton() {
-		self::$withSkeleton = true;
-	}
-
-	public static function unSetSkeleton() {
-		self::$withSkeleton = false;
-	}
 	/**
 	 * @return bool
 	 */
@@ -134,9 +124,6 @@ class OcisHelper {
 	 * @throws \Exception
 	 */
 	public static function recurseUpload($baseUrl, $source, $userId, $password, $destination = '') {
-		if (!self::$withSkeleton) {
-			return;
-		}
 		if ($destination !== '') {
 			$response = WebDavHelper::makeDavRequest(
 				$baseUrl,
@@ -250,5 +237,23 @@ class OcisHelper {
 			return \rmdir($dir);
 		}
 		return true;
+	}
+
+	/**
+	 * On Eos storage backend when the user data is cleared after test run
+	 * Running another test immediately fails. So Send this request to create user home directory
+	 *
+	 * @param string $baseUrl
+	 * @param string $user
+	 * @param string $password
+	 *
+	 * @return void
+	 */
+	public static function createEOSStorageHome($baseUrl, $user, $password) {
+		HttpRequestHelper::get(
+			$baseUrl . "/ocs/v2.php/apps/notifications/api/v1/notifications",
+			$user,
+			$password
+		);
 	}
 }

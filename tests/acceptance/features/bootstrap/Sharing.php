@@ -2757,6 +2757,13 @@ trait Sharing {
 		$this->getPublicPreviewOfFile($path, $token);
 	}
 
+	/**
+	 * @param $user
+	 *
+	 * @throws Exception
+	 *
+	 * @return void
+	 */
 	public function deleteAllSharesForUser($user) {
 		$user = $this->getActualUsername($user);
 		$url = $this->getSharesEndpointPath("?format=json");
