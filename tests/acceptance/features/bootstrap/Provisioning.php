@@ -895,7 +895,7 @@ trait Provisioning {
 		if ($skeletonStrategy === 'copy') {
 			foreach ($usersAttributes as $userAttributes) {
 				$user = $userAttributes['userid'];
-				$dataDir = $revaRoot . "data/$user/files";
+				$dataDir = $revaRoot . "$user/files";
 				if (!\file_exists($dataDir)) {
 					\mkdir($dataDir, 0777, true);
 				}
