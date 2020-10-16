@@ -46,6 +46,7 @@ class JSResourceLocator extends ResourceLocator {
 			$found += $this->appendOnceIfExist($this->serverroot, 'core/'.$fullScript);
 			$found += $this->appendOnceIfExist($baseDirectory, $themeDirectory.'/core/'.$fullScript, $webRoot);
 			$found += $this->appendOnceIfExist($this->serverroot, $fullScript);
+			$found += $this->appendOnceIfExist($this->serverroot, 'apps/'.$fullScript);
 			$found += $this->appendOnceIfExist($baseDirectory, $themeDirectory.'/'.$fullScript, $webRoot);
 			$found += $this->appendOnceIfExist($baseDirectory, $themeDirectory.'/apps/'.$fullScript, $webRoot);
 
